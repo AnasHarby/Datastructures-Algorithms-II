@@ -1,5 +1,7 @@
+import visualizer
+
+
 class AlgorithmObserver:
-    def update(self, arr):
-        pass
-
-
+    @staticmethod
+    def update(args):
+        visualizer.visualize(args)

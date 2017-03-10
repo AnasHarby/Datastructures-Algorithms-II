@@ -1,14 +1,13 @@
+from random import randint
 from time import time
-
 import matplotlib.pyplot as plt
-
-from sorting import *
+from sorting import Sorter
 
 
 def get_random_case(n, rng):
     x = []
     for i in range(n):
-        x.append(random.randint(0, rng))
+        x.append(randint(0, rng))
     return x
 
 
@@ -19,8 +18,9 @@ def measure_algorithm(args, func):
     return end - start
 
 
-sorting_functions = {'Selection': selection_sort, 'Insertion': insertion_sort, 'Bubble': bubble_sort,
-                     'Heap': heap_sort, 'Quick': quick_sort, 'Merge': merge_sort}
+sorting_functions = {'Selection': Sorter.selection_sort, 'Insertion': Sorter.insertion_sort,
+                     'Bubble': Sorter.bubble_sort, 'Heap': Sorter.heap_sort,
+                     'Quick': Sorter.quick_sort,'Merge': Sorter.merge_sort}
 results = {'Selection': [], 'Insertion': [], 'Bubble': [], 'Heap': [], 'Quick': [], 'Merge': []}
 array_sizes = []
 
