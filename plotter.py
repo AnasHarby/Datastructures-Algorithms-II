@@ -13,7 +13,7 @@ def get_random_case(n, rng):
 
 def measure_algorithm(args, func):
     start = time()
-    func(args)
+    func(args=args)
     end = time()
     return end - start
 

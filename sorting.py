@@ -1,43 +1,33 @@
 import random
 from binaryheap import heapalg
+from queue import Queue
 
 
 class Sorter:
     def __init__(self):
         self.observers = []
+        self.track = Queue()
 
-    def attach_observer(self, observer):
-        self.observers.append(observer)
-
-    def detach_observer(self, observer):
-        self.observers.remove(observer)
-
-    def notify_observers(self, args):
-        for observer in self.observers:
-            observer.update(self, args)
-
-    @staticmethod
-    def heap_sort(args, reverse=False):
+    def heap_sort(self, args, reverse=False):
         heapalg.build_heap(args, not reverse)
         for i in reversed(range(len(args))):
             args[0], args[i] = args[i], args[0]
             heapalg.heapify(args, i, reverse=not reverse)
+            self.track.put(args[:])
 
-    @staticmethod
-    def merge_sort(args, reverse=False):
-        Sorter._merge_sort(args, 0, len(args) - 1, reverse)
+    def merge_sort(self, args, reverse=False):
+        self._merge_sort(args, 0, len(args) - 1, reverse)
 
-    @staticmethod
-    def _merge_sort(args, l, r, reverse):
+    def _merge_sort(self, args, l, r, reverse):
         if l < r:
             m = (l + (r - 1)) // 2
-            Sorter._merge_sort(args, l, m, reverse)
-            Sorter._merge_sort(args, m + 1, r, reverse)
-            Sorter._merge(args, l, m, r, reverse)
+            self._merge_sort(args, l, m, reverse)
+            self._merge_sort(args, m + 1, r, reverse)
+            self._merge(args, l, m, r, reverse)
+            self.track.put(args[:])
         pass
 
-    @staticmethod
-    def _merge(args, l, m, r, reverse):
+    def _merge(self, args, l, m, r, reverse):
         n1 = m - l + 1
         n2 = r - m
         left_arr = []
@@ -64,29 +54,26 @@ class Sorter:
                 j += 1
             k += 1
 
-    @staticmethod
-    def quick_sort(args, reverse=False, random=False):
+    def quick_sort(self, args, reverse=False, random=False):
         if not random:
-            Sorter._quick_sort(args, 0, len(args) - 1, reverse)
+            self._quick_sort(args, 0, len(args) - 1, reverse)
         else:
-            Sorter._quick_sort_random(args, 0, len(args) - 1, reverse)
+            self._quick_sort_random(args, 0, len(args) - 1, reverse)
 
-    @staticmethod
-    def _quick_sort(args, p, r, reverse):
+    def _quick_sort(self, args, p, r, reverse):
+        self.track.put(args[:])
         if p < r:
-            q = Sorter._partition(args, p, r, reverse)
-            Sorter._quick_sort(args, p, q - 1, reverse)
-            Sorter._quick_sort(args, q + 1, r, reverse)
+            q = self._partition(args, p, r, reverse)
+            self._quick_sort(args, p, q - 1, reverse)
+            self._quick_sort(args, q + 1, r, reverse)
 
-    @staticmethod
-    def _quick_sort_random(args, p, r, reverse):
+    def _quick_sort_random(self, args, p, r, reverse):
         if p < r:
-            q = Sorter._random_partition(args, p, r, reverse)
-            Sorter._quick_sort_random(args, p, q - 1, reverse)
-            Sorter._quick_sort_random(args, q + 1, r, reverse)
+            q = self._random_partition(args, p, r, reverse)
+            self._quick_sort_random(args, p, q - 1, reverse)
+            self._quick_sort_random(args, q + 1, r, reverse)
 
-    @staticmethod
-    def _partition(args, p, r, reverse):
+    def _partition(self, args, p, r, reverse):
         x = args[r]
         i = p - 1
         for j in range(p, r):
@@ -97,38 +84,38 @@ class Sorter:
         args[i], args[r] = args[r], args[i]
         return i
 
-    @staticmethod
-    def _random_partition(args, p, r, reverse):
+    def _random_partition(self, args, p, r, reverse):
         q = random.randint(p, r)
         args[r], args[q] = args[q], args[r]
-        return Sorter._partition(args, p, r, reverse)
+        return self._partition(args, p, r, reverse)
 
-    @staticmethod
-    def selection_sort(args, reverse=False):
+    def selection_sort(self, args, reverse=False):
         for i in range(len(args)):
             req_index = i
             for j in range(i + 1, len(args)):
                 if reverse ^ (args[req_index] > args[j]):
                     req_index = j
             args[i], args[req_index] = args[req_index], args[i]
+            self.track.put(args[:])
 
-    @staticmethod
-    def bubble_sort(args, reverse=False):
+    def bubble_sort(self, args, reverse=False):
         for i in range(len(args)):
             found = False
             for j in range(len(args) - 1 - i):
                 if reverse ^ (args[j] > args[j + 1]):
                     found = True
                     args[j], args[j + 1] = args[j + 1], args[j]
+                    self.track.put(args[:])
             if not found:
                 pass
 
-    @staticmethod
-    def insertion_sort(args, reverse=False):
+    def insertion_sort(self, args, reverse=False):
         for i in range(1, len(args)):
             temp = args[i]
             j = i - 1
             while j >= 0 and (reverse ^ (temp < args[j])):
                 args[j + 1] = args[j]
+                self.track.put(args[:])
                 j -= 1
             args[j + 1] = temp
+            self.track.put(args[:])
