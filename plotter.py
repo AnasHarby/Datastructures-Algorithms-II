@@ -14,7 +14,7 @@ array_sizes = []
 def _start():
     for i in range(0, 10):
         array_sizes.append(100 * i)
-        args = get_sorted_reversed_case(100 * i, 500 * i)
+        args = get_almost_sorted_case(100 * i, 500 * i)
         print("Test case: ", i, "\t n = ", 100 * i)
         for function in sorting_functions:
             t = measure_algorithm(args[:], sorting_functions.get(function))
