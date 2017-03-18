@@ -35,7 +35,7 @@ class Node:
         return self.right
 
     def is_left_child(self):
-        return (self.parent is not None) and (self.parent.right == self)
+        return (self.parent is not None) and (self.parent.left == self)
 
     def is_right_child(self):
         return (self.parent is not None) and (self.parent.right == self)
@@ -233,6 +233,7 @@ t[6] = "h"
 t[9] = "i"
 t[8] = "j"
 t[10] = "h"
-
+t.delete()
+print(len(t))
 for e in t:
     print(e)
